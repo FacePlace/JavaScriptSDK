@@ -16,6 +16,13 @@ declare module PlayFabServerModule {
          */
         AddFriend(request: PlayFabServerModels.AddFriendRequest, callback: PlayFabModule.ApiCallback<PlayFabServerModels.EmptyResponse>, customData?: any, extraHeaders?: { [key: string]: string }): void;
         /**
+         * Adds the specified generic service identifier to the player's PlayFab account. This is designed to allow for a PlayFab
+         * ID lookup of any arbitrary service identifier a title wants to add. This identifier should never be used as
+         * authentication credentials, as the intent is that it is easily accessible by other players.
+         * https://api.playfab.com/Documentation/Server/method/AddGenericID
+         */
+        AddGenericID(request: PlayFabServerModels.AddGenericIDRequest, callback: PlayFabModule.ApiCallback<PlayFabServerModels.EmptyResult>, customData?: any, extraHeaders?: { [key: string]: string }): void;
+        /**
          * Adds a given tag to a player profile. The tag's namespace is automatically generated based on the source of the tag.
          * https://api.playfab.com/Documentation/Server/method/AddPlayerTag
          */
@@ -232,6 +239,13 @@ declare module PlayFabServerModule {
          */
         GetPlayFabIDsFromFacebookInstantGamesIds(request: PlayFabServerModels.GetPlayFabIDsFromFacebookInstantGamesIdsRequest, callback: PlayFabModule.ApiCallback<PlayFabServerModels.GetPlayFabIDsFromFacebookInstantGamesIdsResult>, customData?: any, extraHeaders?: { [key: string]: string }): void;
         /**
+         * Retrieves the unique PlayFab identifiers for the given set of generic service identifiers. A generic identifier is the
+         * service name plus the service-specific ID for the player, as specified by the title when the generic identifier was
+         * added to the player account.
+         * https://api.playfab.com/Documentation/Server/method/GetPlayFabIDsFromGenericIDs
+         */
+        GetPlayFabIDsFromGenericIDs(request: PlayFabServerModels.GetPlayFabIDsFromGenericIDsRequest, callback: PlayFabModule.ApiCallback<PlayFabServerModels.GetPlayFabIDsFromGenericIDsResult>, customData?: any, extraHeaders?: { [key: string]: string }): void;
+        /**
          * Retrieves the unique PlayFab identifiers for the given set of Nintendo Switch Device identifiers.
          * https://api.playfab.com/Documentation/Server/method/GetPlayFabIDsFromNintendoSwitchDeviceIds
          */
@@ -429,6 +443,11 @@ declare module PlayFabServerModule {
          * https://api.playfab.com/Documentation/Server/method/RemoveFriend
          */
         RemoveFriend(request: PlayFabServerModels.RemoveFriendRequest, callback: PlayFabModule.ApiCallback<PlayFabServerModels.EmptyResponse>, customData?: any, extraHeaders?: { [key: string]: string }): void;
+        /**
+         * Removes the specified generic service identifier from the player's PlayFab account.
+         * https://api.playfab.com/Documentation/Server/method/RemoveGenericID
+         */
+        RemoveGenericID(request: PlayFabServerModels.RemoveGenericIDRequest, callback: PlayFabModule.ApiCallback<PlayFabServerModels.EmptyResult>, customData?: any, extraHeaders?: { [key: string]: string }): void;
         /**
          * Remove a given tag from a player profile. The tag's namespace is automatically generated based on the source of the tag.
          * https://api.playfab.com/Documentation/Server/method/RemovePlayerTag
@@ -706,6 +725,15 @@ declare module PlayFabServerModels {
         /** The PlayFab username of the user being added */
         FriendUsername?: string;
         /** PlayFab identifier of the player to add a new friend. */
+        PlayFabId: string;
+
+    }
+
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.AddGenericIDRequest */
+    export interface AddGenericIDRequest extends PlayFabModule.IPlayFabRequestCommon {
+        /** Generic service identifier to add to the player account. */
+        GenericId: GenericServiceId;
+        /** PlayFabId of the user to link. */
         PlayFabId: string;
 
     }
@@ -1541,6 +1569,11 @@ declare module PlayFabServerModels {
 
     }
 
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.EmptyResult */
+    export interface EmptyResult extends PlayFabModule.IPlayFabResultCommon  {
+
+    }
+
     /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.EntityKey */
     export interface EntityKey {
         /** Unique ID of the entity. */
@@ -2125,6 +2158,11 @@ declare module PlayFabServerModels {
         | "WriteAttemptedDuringExport"
         | "MultiplayerServerTitleQuotaCoresExceeded"
         | "AutomationRuleNotFound"
+        | "EntityAPIKeyLimitExceeded"
+        | "EntityAPIKeyNotFound"
+        | "EntityAPIKeyOrSecretInvalid"
+        | "EconomyServiceUnavailable"
+        | "EconomyServiceInternalError"
         | "MatchmakingEntityInvalid"
         | "MatchmakingPlayerAttributesInvalid"
         | "MatchmakingQueueNotFound"
@@ -2144,6 +2182,8 @@ declare module PlayFabServerModels {
         | "MatchmakingTicketMembershipLimitExceeded"
         | "MatchmakingUnauthorized"
         | "MatchmakingQueueLimitExceeded"
+        | "MatchmakingRequestTypeMismatch"
+        | "MatchmakingBadRequest"
         | "TitleConfigNotFound"
         | "TitleConfigUpdateConflict"
         | "TitleConfigSerializationError"
@@ -2156,18 +2196,8 @@ declare module PlayFabServerModels {
         | "CatalogItemIdInvalid"
         | "CatalogSearchParameterInvalid"
         | "CatalogFeatureDisabled"
-        | "CatalogConfigMissing"
-        | "CatalogConfigTooManyContentTypes"
-        | "CatalogConfigContentTypeTooLong"
-        | "CatalogConfigTooManyTags"
-        | "CatalogConfigTagTooLong"
-        | "CatalogConfigInvalidDeepLinkObject"
-        | "CatalogConfigInvalidDeepLinkPlatform"
-        | "CatalogConfigInvalidDeepLinkFormat"
-        | "CatalogConfigInvalidDisplayPropertyObject"
-        | "CatalogConfigInvalidDisplayPropertyName"
-        | "CatalogConfigInvalidDisplayPropertyType"
-        | "CatalogConfigDisplayPropertyMappingLimit"
+        | "CatalogConfigInvalid"
+        | "CatalogUnauthorized"
         | "ExportInvalidStatusUpdate"
         | "ExportInvalidPrefix"
         | "ExportBlobContainerDoesNotExist"
@@ -2181,7 +2211,28 @@ declare module PlayFabServerModels {
         | "ExportKustoExceptionNew_SomeResources"
         | "ExportKustoExceptionEdit"
         | "ExportKustoConnectionFailed"
-        | "ExportUnknownError";
+        | "ExportUnknownError"
+        | "ExportCantEditPendingExport"
+        | "ExportLimitExports"
+        | "ExportLimitEvents";
+
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.GenericPlayFabIdPair */
+    export interface GenericPlayFabIdPair {
+        /** Unique generic service identifier for a user. */
+        GenericId?: GenericServiceId;
+        /** Unique PlayFab identifier for a user, or null if no PlayFab account is linked to the given generic identifier. */
+        PlayFabId?: string;
+
+    }
+
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.GenericServiceId */
+    export interface GenericServiceId {
+        /** Name of the service for which the player has a unique identifier. */
+        ServiceName: string;
+        /** Unique identifier of the player in that service. */
+        UserId: string;
+
+    }
 
     /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.GetAllSegmentsRequest */
     export interface GetAllSegmentsRequest extends PlayFabModule.IPlayFabRequestCommon {
@@ -2715,6 +2766,23 @@ declare module PlayFabServerModels {
     export interface GetPlayFabIDsFromFacebookInstantGamesIdsResult extends PlayFabModule.IPlayFabResultCommon  {
         /** Mapping of Facebook Instant Games identifiers to PlayFab identifiers. */
         Data?: FacebookInstantGamesPlayFabIdPair[];
+
+    }
+
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.GetPlayFabIDsFromGenericIDsRequest */
+    export interface GetPlayFabIDsFromGenericIDsRequest extends PlayFabModule.IPlayFabRequestCommon {
+        /**
+         * Array of unique generic service identifiers for which the title needs to get PlayFab identifiers. Currently limited to a
+         * maximum of 10 in a single request.
+         */
+        GenericIDs: GenericServiceId[];
+
+    }
+
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.GetPlayFabIDsFromGenericIDsResult */
+    export interface GetPlayFabIDsFromGenericIDsResult extends PlayFabModule.IPlayFabResultCommon  {
+        /** Mapping of generic service identifiers to PlayFab identifiers. */
+        Data?: GenericPlayFabIdPair[];
 
     }
 
@@ -3777,6 +3845,15 @@ declare module PlayFabServerModels {
         /** PlayFab identifier of the friend account which is to be removed. */
         FriendPlayFabId: string;
         /** Unique PlayFab assigned ID of the user on whom the operation will be performed. */
+        PlayFabId: string;
+
+    }
+
+    /** https://api.playfab.com/Documentation/Server/datatype/PlayFab.Server.Models/PlayFab.Server.Models.RemoveGenericIDRequest */
+    export interface RemoveGenericIDRequest extends PlayFabModule.IPlayFabRequestCommon {
+        /** Generic service identifier to be removed from the player. */
+        GenericId: GenericServiceId;
+        /** PlayFabId of the user to remove. */
         PlayFabId: string;
 
     }

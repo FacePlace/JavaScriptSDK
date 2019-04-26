@@ -231,7 +231,7 @@ if(!PlayFab._internalSettings) {
     }
 }
 
-PlayFab.buildIdentifier = "jbuild_javascriptsdk__sdk-genericslave-2_1";
+PlayFab.buildIdentifier = "jbuild_javascriptsdk__sdk-genericslave-1_2";
 PlayFab.sdkVersion = "1.44.190424";
 PlayFab.GenerateErrorReport = function (error) {
     if (error == null)
@@ -255,6 +255,10 @@ PlayFab.ServerApi = {
 
     AddFriend: function (request, callback, customData, extraHeaders) {
         return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/AddFriend", request, "X-SecretKey", callback, customData, extraHeaders);
+    },
+
+    AddGenericID: function (request, callback, customData, extraHeaders) {
+        return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/AddGenericID", request, "X-SecretKey", callback, customData, extraHeaders);
     },
 
     AddPlayerTag: function (request, callback, customData, extraHeaders) {
@@ -413,6 +417,10 @@ PlayFab.ServerApi = {
         return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/GetPlayFabIDsFromFacebookInstantGamesIds", request, "X-SecretKey", callback, customData, extraHeaders);
     },
 
+    GetPlayFabIDsFromGenericIDs: function (request, callback, customData, extraHeaders) {
+        return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/GetPlayFabIDsFromGenericIDs", request, "X-SecretKey", callback, customData, extraHeaders);
+    },
+
     GetPlayFabIDsFromNintendoSwitchDeviceIds: function (request, callback, customData, extraHeaders) {
         return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/GetPlayFabIDsFromNintendoSwitchDeviceIds", request, "X-SecretKey", callback, customData, extraHeaders);
     },
@@ -563,6 +571,10 @@ PlayFab.ServerApi = {
 
     RemoveFriend: function (request, callback, customData, extraHeaders) {
         return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/RemoveFriend", request, "X-SecretKey", callback, customData, extraHeaders);
+    },
+
+    RemoveGenericID: function (request, callback, customData, extraHeaders) {
+        return PlayFab._internalSettings.ExecuteRequestWrapper("/Server/RemoveGenericID", request, "X-SecretKey", callback, customData, extraHeaders);
     },
 
     RemovePlayerTag: function (request, callback, customData, extraHeaders) {
