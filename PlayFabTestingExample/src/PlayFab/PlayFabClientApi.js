@@ -231,7 +231,7 @@ if(!PlayFab._internalSettings) {
     }
 }
 
-PlayFab.buildIdentifier = "jbuild_javascriptsdk__sdk-genericslave-2_0";
+PlayFab.buildIdentifier = "jbuild_javascriptsdk__sdk-genericslave-3_2";
 PlayFab.sdkVersion = "1.55.191015";
 PlayFab.GenerateErrorReport = function (error) {
     if (error == null)
@@ -1291,7 +1291,7 @@ PlayFab.ClientApi = {
 var PlayFabClientSDK = PlayFab.ClientApi;
 
 PlayFab.RegisterWithPhaser = function() {
-    if ( typeof Phaser === "undefined" )
+    if ( typeof Phaser === "undefined" || typeof Phaser.Plugin === "undefined" )
         return;
 
     Phaser.Plugin.PlayFab = function (game, parent) {
